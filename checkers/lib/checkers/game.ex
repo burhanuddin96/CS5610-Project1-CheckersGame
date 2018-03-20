@@ -32,4 +32,46 @@ defmodule Checkers.Game do
 		}
 	end
 
+
+	# handle click event on board
+	# can click on a checker or a movement
+        def click_checker_or_move(game, i) do
+		cond do
+			in_moves(game, i) -> click_move(game, i)
+		  	in_checkers(game, i) -> click_checker(game, i)
+			true -> game
+		end
+	end
+
+	# check whether clicked position is in moves
+	def in_moves(game, i)
+		Enum.any?(game.moves, fn(x) -> x == i end)
+	end
+
+	# check whether clicked position is in checkers
+	def in_checkers(game, i)
+		Enum.any?(game.light_s, fn(x) -> x == i end) or
+		Enum.any?(game.light_k, fn(x) -> x == i end) or
+		Enum.any?(game.dark_s, fn(x) -> x == i end) or
+		Enum.any?(game.dark_k, fn(x) -> x == i end)
+	end
+
+	# handle click on a checker
+     	def click_checker(game, i)
+		game = add_jumps(game, i)
+		if length(game.moves) == 0 do
+			add_moves(game, i)
+		else
+  			game
+		end
+	end
+
+	# add jumps this checker can make
+	def add_jmps(game, i)
+	end
+
+	# add moves this checker can make
+	def add_moves(game, i)
+	end
+
 end
