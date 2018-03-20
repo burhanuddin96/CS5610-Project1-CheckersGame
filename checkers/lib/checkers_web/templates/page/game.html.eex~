@@ -1,0 +1,15 @@
+<style>
+    .gname{text-align: center;}
+</style>
+<div class="row">
+  <div class="col">
+    <h1 class="gname">Game Instance: <%= @game %></h1>
+    <script>
+      window.gameName = "<%= @game %>";
+      window.currentuser = "<%= @conn.assigns.current_user %>"
+    </script>
+    <div id="root">
+      <p>React app not loaded...</p>
+    </div>
+  </div>
+</div>
