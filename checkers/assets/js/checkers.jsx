@@ -74,6 +74,16 @@ class CheckersGame extends React.Component {
     this.setState(payload.game);
   }
   
+  gotView(view) {
+	console.log("New view", view);
+    this.setState(view.game);
+  }
+  
+  clicked(tileID){
+  	this.channel.push("click",{tileID: tileID},)
+  		.receive("ok", this.gotView.bind(this));
+  }
+  
   render(){
   	if(this.state.p1 == null || this.state.p2 == null)
   		return(<div><div> Player 1 = {this.state.p1}</div><div> Player 2 = {this.state.p2}</div>
@@ -177,21 +187,15 @@ function selectTile(tileID, params){
 	let root = params.root;
 	
 	if((root.get_sel_checker() != -1) && (root.get_current_player() == root.role)){
-		/*
-			Here comes the code when a tile is selected
-		*/
+		root.clicked(tileID);
 	}
 }
 
 function selectChecker(tileID, params){
 	let root = params.root;
 	let checkerID = "c_"+tileID;
-	console.log(tileID);
 	if((document.getElementById(checkerID).className == root.role) && (root.get_current_player() == root.role)){
-		/*
-			Here comes the code when a tile is selected
-		*/
-		alert("Hey! It works!!!")
+		root.clicked(tileID);
 	}
 }
 

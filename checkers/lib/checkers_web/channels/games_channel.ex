@@ -26,6 +26,15 @@ defmodule CheckersWeb.GamesChannel do
     {:reply, {:ok, payload}, socket}
   end
 
+  def handle_in("click", %{"tileID" => tileID}, socket) do
+    IO.inspect "Came here"
+    IO.inspect tileID
+    game = Game.client_checker_or_move(Checkers.GameBackup.load(socket.assigns.name), tileID)
+    Checkers.GameBackup.save(socket.assigns[:name], game)
+    broadcast_from socket, "shout", game
+    {:reply, {:ok, %{"game" => game}}, socket}
+  end
+
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (games:lobby).
   def handle_in("shout", payload, socket) do
@@ -53,8 +62,6 @@ defmodule CheckersWeb.GamesChannel do
   def terminate(_msg, socket) do
     game = Game.clientview_after_player_leaves(Checkers.GameBackup.load(socket.assigns.name), socket.assigns.role)
     Checkers.GameBackup.save(socket.assigns.name, game)
-    IO.inspect "Terminate"
-    IO.inspect game
     broadcast! socket, "shout", game
     :ok = Checkers.ChannelMonitor.demonitor(:games, self())
 end
@@ -63,7 +70,6 @@ end
     game = Game.clientview_after_player_leaves(Checkers.GameBackup.load(socket.assigns.name), role)
     Checkers.GameBackup.save(name, game)
     socket = assign(socket, :game, game)
-    IO.inspect socket
     send(self, :after_leave)
     {:ok,socket}
   end

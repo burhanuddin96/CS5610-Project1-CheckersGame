@@ -106,25 +106,25 @@ function RenderBoard(params){
 			if (root.get_dark_soldiers().includes(i)){
 				if (root.get_moves().includes(i)){
 					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}>
-						<div id={tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
 						</div></div>);
 				}
 				else{
 					tiles.push(<div id={tile_id} key={i} className="dark_tile">
-						<div id={tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
 						</div></div>);
 				}
 			}
 			else if (root.get_dark_kings().includes(i)){
 				if (root.get_moves().includes(i)){
 					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}>
-						<div id={tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
 							K
 						</div></div>)
 				}
 				else{			
 					tiles.push(<div id={tile_id} key={i} className="dark_tile">
-						<div id={tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
 							K
 						</div></div>)
 				}
@@ -132,25 +132,25 @@ function RenderBoard(params){
 			else if (root.get_light_soldiers().includes(i)){
 				if (root.get_moves().includes(i)){
 					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}>
-						<div id={tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
 						</div></div>)
 				}
 				else{
 					tiles.push(<div id={tile_id} key={i} className="dark_tile">
-						<div id={tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
 						</div></div>)
 				}
 			}
 			else if (root.get_light_kings().includes(i)){
 				if (root.get_moves().includes(i)){
 					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}>
-						<div id={tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
 							K
 						</div></div>)
 				}
 				else{
 					tiles.push(<div id={tile_id} key={i} className="dark_tile">
-						<div id={tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
 							K
 						</div></div>)
 				}
@@ -177,21 +177,15 @@ function selectTile(tileID, params){
 	let root = params.root;
 	
 	if((root.get_sel_checker() != -1) && (root.get_current_player() == root.role)){
-		/*
-			Here comes the code when a tile is selected
-		*/
+		root.clicked(tileID);
 	}
 }
 
 function selectChecker(tileID, params){
 	let root = params.root;
 	let checkerID = "c_"+tileID;
-	console.log(tileID);
 	if((document.getElementById(checkerID).className == root.role) && (root.get_current_player() == root.role)){
-		/*
-			Here comes the code when a tile is selected
-		*/
-		alert("Hey! It works!!!")
+		root.clicked(tileID);
 	}
 }
 
