@@ -67,11 +67,20 @@ class CheckersGame extends React.Component {
   	return this.state.checker_selected;
   }
   
-  
   joinView(payload){
   	this.role = payload.role;
   	console.log("New view", payload);
-    this.setState(payload.game);
+    	this.setState(payload.game);
+  }
+	
+  gotView(view){
+  	console.log("New view" , view);
+	this.setState(view.game);
+  }
+	
+  clicked(tileID){
+  	this.channel.push("click",{tileID: tileID},)
+	  .receive("ok",this.gotView.bind(this));
   }
   
   gotView(view) {
