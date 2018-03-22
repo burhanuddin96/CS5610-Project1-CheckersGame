@@ -5,7 +5,7 @@
 div#board {
 	background: #FDCF02; 
 	border: #999 1px solid;
-	width: 557px;
+	width: 559px;
 	height: 550px;
 	padding: 5px;
 	margin: auto auto;

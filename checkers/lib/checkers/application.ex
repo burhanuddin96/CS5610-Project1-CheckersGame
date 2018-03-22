@@ -15,6 +15,7 @@ defmodule Checkers.Application do
       # Start your own worker by calling: Checkers.Worker.start_link(arg1, arg2, arg3)
       # worker(Checkers.Worker, [arg1, arg2, arg3]),
       worker(Checkers.GameBackup, []),
+      worker(Checkers.ChannelMonitor, [:games]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

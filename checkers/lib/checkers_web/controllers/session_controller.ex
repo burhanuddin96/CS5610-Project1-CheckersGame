@@ -6,7 +6,6 @@ defmodule CheckersWeb.SessionController do
     if !conn.assigns.current_user do
     	conn
     	|> put_session(:username, username)
-      |> put_session(:role, nil)
     	|> put_flash(:info, "Logged in successfully as #{username}.")	
       |> redirect(to: page_path(conn, :gname)) 
     else

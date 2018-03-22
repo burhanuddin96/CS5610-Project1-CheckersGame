@@ -5,34 +5,20 @@ defmodule CheckersWeb.GamesChannel do
 
   def join("games:"<>game, %{"user" => current_user}, socket) do
     if authorized?(current_user) do
-      {gameState, role} = game_state(game, current_user)
+      gameInstance = Checkers.GameBackup.load(game) || Game.new()
+      {gameState, role} = Game.clientview_after_user_joins(gameInstance, current_user)
+      IO.inspect gameState
+      Checkers.GameBackup.save(game, gameState)
       socket = socket
       |> assign(:name, game)
-      |> assign(:game, gameState)
+      |> assign(:role, role)
+      send self(), {:after_join, gameState}
+      :ok = Checkers.ChannelMonitor.monitor(:games, self(), {__MODULE__, :leave, [socket, game, role]})
       {:ok, %{"join" => game, "game" => gameState, "role" => role}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
   end
-
-  def game_state(gname, username) do
-    game = Checkers.GameBackup.load(gname) 
-
-    if game do
-      if game.p2 do
-        {game, "observer"}
-      else
-        updated_game = Game.game_after_player2_joins(game, username)
-        Checkers.GameBackup.save(gname, updated_game)
-        {updated_game, "player2"}
-      end
-    else
-      new_game = Game.game_after_player1_joins(username)
-      Checkers.GameBackup.save(gname, new_game)
-      {new_game, "player1"}
-    end
-  end
-
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
@@ -43,12 +29,42 @@ defmodule CheckersWeb.GamesChannel do
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (games:lobby).
   def handle_in("shout", payload, socket) do
-    broadcast socket, "shout", payload
+    broadcast_from socket, "shout", payload
     {:noreply, socket}
   end
+
+  def handle_info({:after_join, game}, socket) do
+    broadcast_from socket, "shout", game
+    {:noreply, socket}
+  end
+
+  def handle_info(:after_leave, socket) do
+    IO.inspect "Came here"
+    broadcast_from socket, "shout", socket.assigns[:game]
+    {:noreply, socket}
+  end
+
 
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true
+  end
+
+  def terminate(_msg, socket) do
+    game = Game.clientview_after_player_leaves(Checkers.GameBackup.load(socket.assigns.name), socket.assigns.role)
+    Checkers.GameBackup.save(socket.assigns.name, game)
+    IO.inspect "Terminate"
+    IO.inspect game
+    broadcast! socket, "shout", game
+    :ok = Checkers.ChannelMonitor.demonitor(:games, self())
+end
+
+  def leave(socket, name, role) do
+    game = Game.clientview_after_player_leaves(Checkers.GameBackup.load(socket.assigns.name), role)
+    Checkers.GameBackup.save(name, game)
+    socket = assign(socket, :game, game)
+    IO.inspect socket
+    send(self, :after_leave)
+    {:ok,socket}
   end
 end

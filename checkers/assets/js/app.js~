@@ -25,7 +25,8 @@ import game_init from "./checkers";
 function start() {
     let root = document.getElementById('root');
     if(root){
-    	let channel = socket.channel("games:" + window.gameName, {});
+    console.log(window.userToken)
+    	let channel = socket.channel("games:" + window.gameName, {user: window.current_user});
     	game_init(root,channel);
     }
 }

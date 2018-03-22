@@ -12,7 +12,7 @@
   </head>
 
   <body>
-  <div class="container">
+  <div class="log container">
   	<div class="row">
   		<div class="col-3 offset-9">
   			<%= if @current_user do %>

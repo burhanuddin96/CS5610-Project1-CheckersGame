@@ -6,7 +6,8 @@
     <h1 class="gname">Game Instance: <%= @game %></h1>
     <script>
       window.gameName = "<%= @game %>";
-      window.currentuser = "<%= @conn.assigns.current_user %>"
+      window.current_user = "<%= @conn.assigns.current_user %>"
+      window.userToken = "<%= @conn.assigns.user_token%>"
     </script>
     <div id="root">
       <p>React app not loaded...</p>

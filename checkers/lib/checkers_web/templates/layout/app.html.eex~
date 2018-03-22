@@ -12,11 +12,12 @@
   </head>
 
   <body>
-  <div class="container">
+  <style>.log{float: right;}</style>
+  <div class="log container">
   	<div class="row">
   		<div class="col-3 offset-9">
   			<%= if @current_user do %>
-  				<p>Logged in as: <%= @current_user.name %></p>
+  				<p>Logged in as: <%= @current_user %></p>
   				<%= link "Log Out", to: "/session", method: :delete %>
   			<% end %>
 		</div>

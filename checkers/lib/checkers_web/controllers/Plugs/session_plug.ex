@@ -1,7 +1,6 @@
 defmodule CheckersWeb.Auth do
 	import Plug.Conn
 	import Phoenix.Controller
-	#use CheckersWeb, :controller
 	alias CheckersWeb.Router.Helpers, as: Routes
 
 	def init(options) do
@@ -14,11 +13,9 @@ defmodule CheckersWeb.Auth do
 		if user do
 			conn
 			|>assign(:current_user, user)
-			|>assign(:role, role)
 		else
 			conn
 			|>assign(:current_user, nil)
-			|>assign(:role, nil)
 		end
 	end
 

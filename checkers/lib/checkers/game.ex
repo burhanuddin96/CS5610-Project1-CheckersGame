@@ -1,35 +1,53 @@
 defmodule Checkers.Game do
 	
-	def game_after_player1_joins(username) do
+	def new() do
 		%{
-      		p1: username,
+      		p1: nil,
       		p2: nil,
-      		light_s: [],
+      		light_s: [41,43,45,47,48,50,52,54,57,59,61,63],
       		light_k: [],
-     		dark_s: [],
+     		dark_s: [0,2,4,6,9,11,13,15,16,18,20,22],
       		dark_k: [],
       		moves: [],
-      		current_player: "P1",
+      		current_player: "dark",
       		checker_selected: -1,
       		jump: false,
-      		game_state: "wait_p",
 		}
 	end
 
-	def game_after_player2_joins(game, username) do
-		%{
-      		p1: game.p1,
-      		p2: username,
-      		light_s: game.light_s,
-      		light_k: game.light_k,
-     		dark_s: game.dark_s,
-      		dark_k: game.dark_k,
-      		moves: [],
-      		current_player: "P1",
-      		checker_selected: -1,
-      		jump: false,
-      		game_state: "wait_p",
-		}
+
+	def clientview_after_user_joins(game, user) do
+		if (!game.p1) do
+			IO.inspect "Player 1 joining..."
+			game = Map.replace!(game, :p1, user)
+			{game,"dark"}
+		else
+			if (!game.p2) do
+				IO.inspect "Player 2 joining..."
+				game = Map.replace!(game, :p2, user)
+				{game,"light"}	
+			else
+				IO.inspect "Observer joining..."
+				{game,"observer"}
+			end
+		end
+	end
+
+
+	def clientview_after_player_leaves(game, role) do
+		case role do
+			"dark" ->
+				IO.inspect "Dark Leaving"
+				game
+				|> Map.replace!(:p1, nil)
+			"light" ->
+				IO.inspect "Light Leaving"
+				game
+				|> Map.replace!(:p2, nil)
+			"observer" ->
+				IO.inspect "Observer Leaving"
+				game
+		end
 	end
 
 end
