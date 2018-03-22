@@ -27,7 +27,7 @@ defmodule CheckersWeb.GamesChannel do
   end
 
   def handle_in("click", %{"tileID" => tileID}, socket) do
-    game = Game.client_checker_or_move(Checkers.GameBackup.load(socket.assigns.name), tileID)
+    game = Game.click_checker_or_move(Checkers.GameBackup.load(socket.assigns.name), tileID)
     Checkers.GameBackup.save(socket.assigns[:name], game)
     broadcast_from socket, "shout", game
     {:reply, {:ok, %{"game" => game}}, socket}
