@@ -25,7 +25,14 @@ defmodule CheckersWeb.GamesChannel do
   def handle_in("ping", payload, socket) do
     {:reply, {:ok, payload}, socket}
   end
-
+  
+  def handle_in("click", %{"tileID" => tileID}, socket) do
+    game = Game.click_checker_or_move(Checkers.GameBackup.load(socket.assigns.name, tileID))
+    Checkers.GameBackup.save(socket.assigns.name, game)
+    broadcast_from socket, "shout", game  
+    {:reply, {:ok, %{"game" => game}}, socket}
+  end
+  
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (games:lobby).
   def handle_in("shout", payload, socket) do
