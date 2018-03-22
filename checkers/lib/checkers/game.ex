@@ -50,4 +50,9 @@ defmodule Checkers.Game do
 		end
 	end
 
+#***************************************************************************
+
+	def client_checker_or_move(game,i) do
+		##Code goes here
+	end
 end

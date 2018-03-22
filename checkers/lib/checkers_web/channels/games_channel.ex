@@ -25,27 +25,14 @@ defmodule CheckersWeb.GamesChannel do
   def handle_in("ping", payload, socket) do
     {:reply, {:ok, payload}, socket}
   end
-<<<<<<< HEAD
 
   def handle_in("click", %{"tileID" => tileID}, socket) do
-    IO.inspect "Came here"
-    IO.inspect tileID
     game = Game.client_checker_or_move(Checkers.GameBackup.load(socket.assigns.name), tileID)
     Checkers.GameBackup.save(socket.assigns[:name], game)
     broadcast_from socket, "shout", game
     {:reply, {:ok, %{"game" => game}}, socket}
   end
-
-=======
   
-  def handle_in("click", %{"tileID" => tileID}, socket) do
-    game = Game.click_checker_or_move(Checkers.GameBackup.load(socket.assigns.name, tileID))
-    Checkers.GameBackup.save(socket.assigns.name, game)
-    broadcast_from socket, "shout", game  
-    {:reply, {:ok, %{"game" => game}}, socket}
-  end
-  
->>>>>>> 7f2ca661b722ba4fb035af99d5fedd7aa5436ec8
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (games:lobby).
   def handle_in("shout", payload, socket) do
@@ -59,7 +46,6 @@ defmodule CheckersWeb.GamesChannel do
   end
 
   def handle_info(:after_leave, socket) do
-    IO.inspect "Came here"
     broadcast_from socket, "shout", socket.assigns[:game]
     {:noreply, socket}
   end

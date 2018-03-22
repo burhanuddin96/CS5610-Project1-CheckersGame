@@ -122,67 +122,70 @@ function RenderBoard(params){
 		let tile_id = i;
 		let color = ((Math.floor(i/8)%2) == (Math.floor(i%8)%2))?"dark":"light";
 		if (color == "dark"){
+			let sc = "";
+			if (root.get_sel_checker() == i){
+				sc = " selected"			
+			}
+		
 			if (root.get_dark_soldiers().includes(i)){
 				if (root.get_moves().includes(i)){
-					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}>
-						<div id={"c_"+tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
+					tiles.push(<div id={tile_id} key={i} className="dark_tile move" onClick={selectTile.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className={"dark"+sc} onClick={selectChecker.bind(this, i, params)}>
 						</div></div>);
 				}
 				else{
 					tiles.push(<div id={tile_id} key={i} className="dark_tile">
-						<div id={"c_"+tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className={"dark"+sc} onClick={selectChecker.bind(this, i, params)}>
 						</div></div>);
 				}
 			}
 			else if (root.get_dark_kings().includes(i)){
 				if (root.get_moves().includes(i)){
-					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}>
-						<div id={"c_"+tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
+					tiles.push(<div id={tile_id} key={i} className="dark_tile move" onClick={selectTile.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className={"dark"+sc} onClick={selectChecker.bind(this, i, params)}>
 							K
 						</div></div>)
 				}
 				else{			
 					tiles.push(<div id={tile_id} key={i} className="dark_tile">
-						<div id={"c_"+tile_id} key={"c_"+tile_id} className="dark" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className={"dark"+sc} onClick={selectChecker.bind(this, i, params)}>
 							K
 						</div></div>)
 				}
 			}
 			else if (root.get_light_soldiers().includes(i)){
 				if (root.get_moves().includes(i)){
-					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}>
-						<div id={"c_"+tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
+					tiles.push(<div id={tile_id} key={i} className="dark_tile move" onClick={selectTile.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className={"light"+sc} onClick={selectChecker.bind(this, i, params)}>
 						</div></div>)
 				}
 				else{
 					tiles.push(<div id={tile_id} key={i} className="dark_tile">
-						<div id={"c_"+tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className={"light"+sc} onClick={selectChecker.bind(this, i, params)}>
 						</div></div>)
 				}
 			}
 			else if (root.get_light_kings().includes(i)){
 				if (root.get_moves().includes(i)){
-					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}>
-						<div id={"c_"+tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
+					tiles.push(<div id={tile_id} key={i} className="dark_tile move" onClick={selectTile.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className={"light"+sc} onClick={selectChecker.bind(this, i, params)}>
 							K
 						</div></div>)
 				}
 				else{
 					tiles.push(<div id={tile_id} key={i} className="dark_tile">
-						<div id={"c_"+tile_id} key={"c_"+tile_id} className="light" onClick={selectChecker.bind(this, i, params)}>
+						<div id={"c_"+tile_id} key={"c_"+tile_id} className={"light"+sc} onClick={selectChecker.bind(this, i, params)}>
 							K
 						</div></div>)
 				}
 			}	
 			else{
 				if (root.get_moves().includes(i)){
-					tiles.push(<div id={tile_id} key={i} className="dark_tile" onClick={selectTile.bind(this, i, params)}></div>)
+					tiles.push(<div id={tile_id} key={i} className="dark_tile move" onClick={selectTile.bind(this, i, params)}></div>)
 				}
 				else{
 					tiles.push(<div id={tile_id} key={i} className="dark_tile"></div>)
-				}
-			
-				
+				}	
 			}
 		}
 		else{
