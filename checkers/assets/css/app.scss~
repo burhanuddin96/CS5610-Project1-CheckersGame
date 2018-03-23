@@ -2,28 +2,88 @@
 
 @import "bootstrap";
 
+body {
+	background-image: url("/images/bgpic.jpg");
+	font-family: "Times New Roman";
+}
+
+.log{
+	color: white;
+}
+
+.header{
+	color: #F8C908;
+	text-shadow: 3px 2px red;
+	font-style: oblique;
+	font-size: 50px;
+	font-weight: bold;
+	text-decoration: overline underline;
+}
+
+.name{
+	font-weight: bold;
+	text-decoration: underline; 
+}
+
+.dashed{
+	outline-style: dashed;
+}
+
 div#board {
 	background: #FDCF02; 
 	border: #999 1px solid;
 	width: 557px;
-	height: 550px;
+	height: 555px;
 	padding: 5px;
 	margin: auto auto;
 }
 
+.a{
+	background: lightblue;
+}
+
+.b{
+	background: red;
+}
+
+.turn{
+	font-weight: bold;
+	color: white;
+	font-size: 18px;
+}
+
+.surrender-p{
+	background: green;
+	height: 100px;
+	padding: 10px 30px;
+}
+
+.surrender-c{
+	background: #583306;
+	border: black 10px solid;
+	border-radius: 25%;
+	height: 75px;
+	width: 225px;
+	vertical-align: middle;
+	font-size: 30px;
+	color: white;
+	line-height: 55px;
+	font-style: oblique;
+}
+
 .dark_tile {
-	background: #F5CC15;
+	background: #583306;
 	width: 68px;
 	height: 68px;
 	float: left;
 	vertical-align: middle;
 	line-height: 10px;
 	margin: auto;
-	padding: 20px;
+	padding: 5px 5px;
 }
 
 .light_tile {
-	background: #F8E947;
+	background: #edb26c;
 	width: 68px;
 	height: 68px;
 	float: left;
@@ -36,25 +96,27 @@ div#board {
 .light {
 	background: #C70039;
 	border: #900C3F 10px solid;
-	width: 30px;
-	height: 30px;
-	margin: auto auto;
+	width: 55px;
+	height: 55px;
+	margin: auto;
 	text-align: center;
 	vertical-align: middle;
 	line-height: 10px;
-	padding: 8px 5px;
+	padding: 2px 2px;
+	border-radius: 50%;
 }
 
 .dark {
 	background: #636363;
 	border: #4D4D4D 10px solid;
-	width: 30px;
-	height: 30px;
+	width: 55px;
+	height: 55px;
 	margin: auto;
 	text-align: center;
 	vertical-align: middle;
 	line-height: 10px;
-	padding: 8px 5px;
+	padding: 2px 2px;
+	border-radius: 50%;
 }
 
 .move{	
@@ -62,7 +124,7 @@ div#board {
 }
 
 .selected{
-	box-shadow: 10px 10px 5px grey;
+	box-shadow: 7px 7px 4px grey;
 }
 
 

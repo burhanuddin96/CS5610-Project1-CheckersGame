@@ -10,6 +10,7 @@ defmodule CheckersWeb.GamesChannel do
       IO.inspect gameState
       Checkers.GameBackup.save(game, gameState)
       socket = socket
+      |> assign(:user, current_user)
       |> assign(:name, game)
       |> assign(:role, role)
       send self(), {:after_join, gameState}
@@ -57,16 +58,15 @@ defmodule CheckersWeb.GamesChannel do
   end
 
   def terminate(_msg, socket) do
-    game = Game.clientview_after_player_leaves(Checkers.GameBackup.load(socket.assigns.name), socket.assigns.role)
+    game = Game.clientview_after_player_leaves(Checkers.GameBackup.load(socket.assigns.name), socket.assigns.role, socket.assigns.user)
     Checkers.GameBackup.save(socket.assigns.name, game)
     broadcast! socket, "shout", game
     :ok = Checkers.ChannelMonitor.demonitor(:games, self())
 end
 
   def leave(socket, name, role) do
-    game = Game.clientview_after_player_leaves(Checkers.GameBackup.load(socket.assigns.name), role)
+    game = Game.clientview_after_player_leaves(Checkers.GameBackup.load(socket.assigns.name), role, socket.assigns.current_user)
     Checkers.GameBackup.save(name, game)
-    socket = assign(socket, :game, game)
     send(self, :after_leave)
     {:ok,socket}
   end

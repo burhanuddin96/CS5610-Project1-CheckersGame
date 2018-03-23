@@ -21,6 +21,8 @@ class CheckersGame extends React.Component {
       current_player: "dark",
       checker_selected: -1,
       jump: false,
+      winner: null,
+      observers: [],
     };
     this.role = null;
     this.channel = props.channel;
@@ -93,20 +95,27 @@ class CheckersGame extends React.Component {
   		.receive("ok", this.gotView.bind(this));
   }
   
+  surrender(ev) {
+  	this.channel.push("resetGame",{},)
+  		.receive("ok", this.gotView.bind(this));
+  }
+  
   render(){
   	if(this.state.p1 == null || this.state.p2 == null)
-  		return(<div><div> Player 1 = {this.state.p1}</div><div> Player 2 = {this.state.p2}</div>
-  			<div>Current User = {window.current_user}<br/>Role = {this.role}</div>
-  			<div>Waiting For Another Player...</div></div>
-  		);
+  		return(<div className="name text-center"><h4>Waiting For Another Player...</h4></div>);
   	else
   		return(
   			<div className="row justify-content-md-center">
-    			<div className="col col-lg-2">					
-					New Game
-    			</div>
-    			<div className="col-md-auto">
+    			<div className="col">
+    				<Turn root={this}/>
     				<RenderBoard root={this}/>
+    			</div>
+    			<div className="col a">				
+    			</div>
+    			<div className="col">
+    				<div className="row surrender-p">
+    				<Surrender game={this.surrender.bind(this)}/>
+    				</div> 
     			</div>
     		</div>
   		);
@@ -211,6 +220,29 @@ function selectChecker(tileID, params){
 	}
 }
 
+function Turn(params){
+	let root = params.root;
+	let turn = "";	
+	if(root.role == root.get_current_player())
+		turn = "It's your turn...";
+	else if(root.role == "dark")
+		turn = "Player 2 is playing...";
+	else if(root.role == "light")
+		turn = "Player 1 is playing...";
+	else{
+		if(root.get_current_player() == "dark")
+			turn = "Player 1 is playing...";
+		else
+			turn = "Player 2 is playing...";
+	}
+	return <div className="turn">{turn}</div>;
+}
+
+function Surrender(params){
+	return (<div className="surrender-c text-center" onClick={params.game}>
+    			<p>SURRENDER</p>
+  			</div>);
+}
 
 
 

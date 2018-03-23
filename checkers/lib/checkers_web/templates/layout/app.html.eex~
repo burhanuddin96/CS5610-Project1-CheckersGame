@@ -12,18 +12,20 @@
   </head>
 
   <body>
-  <style>.log{float: right;}</style>
+  <header>
   <div class="log container">
-  	<div class="row">
-  		<div class="col-3 offset-9">
-  			<%= if @current_user do %>
-  				<p>Logged in as: <%= @current_user %></p>
-  				<%= link "Log Out", to: "/session", method: :delete %>
-  			<% end %>
-		</div>
+  	<div class="text-right">
+  		<%= if @current_user do %>
+  			Logged in as: <%= @current_user %>
+  			<%= link " (Log Out)", to: "/session", method: :delete %>
+  		<% end %>
+  	</div>
+  	<div class="text-center">
+  		<h1 class="header">CHECKERS</h1>
   	</div>
   </div>
-    <div class="container">
+  </header>
+    <div class="container dashed">
       <%= if get_flash(@conn, :info) do  %>
         <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <% end %>
