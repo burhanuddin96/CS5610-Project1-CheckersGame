@@ -3,8 +3,8 @@
             <%= form_tag("/session", method: :post) do %>
         	<div class="form-group text-center">
         		<h4>
-        			<span class="username">Enter Username: </span><input type="text" name="username" placeholder="username"/>
-	        		<button class="btn btn-primary">Login</button>
+        			<span class="name">Enter Username: </span><input type="text" name="username" placeholder="username"/>
+	        		<button class="btn btn-dark btn-floating">Login</button>
 	        	</h4>
         	</div>
         	<% end %>

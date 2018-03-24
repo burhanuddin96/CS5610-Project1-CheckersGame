@@ -34,6 +34,13 @@ defmodule CheckersWeb.GamesChannel do
     {:reply, {:ok, %{"game" => game}}, socket}
   end
   
+  def handle_in("surrender", %{"role" => role}, socket) do
+    game = Game.clientview_after_surrender(Checkers.GameBackup.load(socket.assigns.name), role)
+    Checkers.GameBackup.save(socket.assigns[:name], Game.new())
+    broadcast_from socket, "shout", game
+    {:reply, {:ok, %{"game" => game}}, socket}
+  end
+
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (games:lobby).
   def handle_in("shout", payload, socket) do

@@ -4,7 +4,7 @@
         	<div class="form-group text-center">
         	<h4>	
         		<span class="name">Enter Game Name: </span><%= text_input f, :name, [placeholder: "Lobby Name"] %>
-        		<%= submit "Enter Game", [class: "btn btn-primary"] %>
+        		<%= submit "Enter Game", [class: "btn btn-dark btn-floating bts"] %>
         	</h4>
         	<% end %>
     </div>
