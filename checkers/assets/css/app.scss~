@@ -27,7 +27,6 @@ body {
 	font-size: 50px;
 	background: url("/images/btnpic.jpg");
 	padding: 10px auto;
-	width: 50%;
 }
 
 

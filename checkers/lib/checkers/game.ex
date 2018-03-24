@@ -67,6 +67,12 @@ defmodule Checkers.Game do
 		end
 	end
 
+	def clientview_for_newgame(game) do
+		new()
+		|> Map.replace!(:p1, game.p1)
+		|> Map.replace!(:p2, game.p2)
+		|> Map.replace!(:observers, game.observers)
+	end
 
 	#############################################################################
 	# handle click event on board

@@ -29,14 +29,19 @@ defmodule CheckersWeb.GamesChannel do
 
   def handle_in("click", %{"tileID" => tileID}, socket) do
     game = Game.click_checker_or_move(Checkers.GameBackup.load(socket.assigns.name), tileID)
-    Checkers.GameBackup.save(socket.assigns[:name], game)
+    if(!game.winner) do
+      Checkers.GameBackup.save(socket.assigns[:name], game)
+    else
+      Checkers.GameBackup.save(socket.assigns[:name], Game.clientview_for_newgame(game))
+    end
+
     broadcast_from socket, "shout", game
     {:reply, {:ok, %{"game" => game}}, socket}
   end
   
   def handle_in("surrender", %{"role" => role}, socket) do
     game = Game.clientview_after_surrender(Checkers.GameBackup.load(socket.assigns.name), role)
-    Checkers.GameBackup.save(socket.assigns[:name], Game.new())
+    Checkers.GameBackup.save(socket.assigns[:name], Game.clientview_for_newgame(game))
     broadcast_from socket, "shout", game
     {:reply, {:ok, %{"game" => game}}, socket}
   end

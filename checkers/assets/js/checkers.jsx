@@ -354,8 +354,10 @@ function Win(params){
 	else
 		winner=root.get_player2();
 	
-	return(<div className="text-center winner"> {winner} won... <br/>
-		<span className="text-right">Please exit lobby and start a new game.</span></div>);
+	return(<div className="winbox">
+		<div className="text-center winner"> {winner} won... </div><br/>
+		<span className="text-right">Please exit lobby and start a new game.</span>
+		</div>);
 }
 
 
