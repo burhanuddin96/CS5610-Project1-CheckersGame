@@ -256,6 +256,8 @@ function selectTile(tileID, params){
 	let root = params.root;
 	
 	if((root.get_sel_checker() != -1) && (root.get_current_player() == root.role)){
+		var audio = new Audio("sounds/move.wav");
+		audio.play();
 		root.clicked(tileID);
 	}
 }
@@ -264,6 +266,8 @@ function selectChecker(tileID, params){
 	let root = params.root;
 	let checkerID = "c_"+tileID;
 	if((document.getElementById(checkerID).className == root.role) && (root.get_current_player() == root.role)){
+		var audio = new Audio("sounds/select.wav");
+		audio.play();
 		root.clicked(tileID);
 	}
 }
