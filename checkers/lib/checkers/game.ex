@@ -8,6 +8,7 @@ defmodule Checkers.Game do
       		light_k: [],
      		dark_s: [0,2,4,6,9,11,13,15,16,18,20,22],
       		dark_k: [],
+		jump_checkers: [],
       		moves: [],
       		current_player: "dark",
       		checker_selected: -1,
@@ -81,8 +82,12 @@ defmodule Checkers.Game do
         def click_checker_or_move(game, i) do
    		IO.inspect "click_checker_or_move"
 		cond do
-			in_moves(game, i) -> click_move(game, i)
-		  	!game.force_jump and in_checkers(game, i) -> click_checker(game, i)
+			in_moves(game, i) 
+			  -> click_move(game, i)
+		  	!game.force_jump and in_checkers(game, i) 
+			  -> click_checker(game, i)
+		  	in_jump_checkers(game, i) and in_checkers(game, i) 
+			  -> click_checker(game, i)
 			true -> game
 		end
 	end
@@ -132,6 +137,10 @@ defmodule Checkers.Game do
 		Enum.any?(game.dark_k, fn(x) -> x == i end)
 	end
 
+	# checker whether clicked position is in jump checkers
+	def in_jump_checkers(game, i) do
+		Enum.any?(game.jump_checkers, fn(x) -> x == i end)
+	end
 
 
 
@@ -192,6 +201,7 @@ defmodule Checkers.Game do
 		   and in_boundary(x-2, y-2)  
 		   and !in_checkers(game, (x-2)+8*(y-2)) do
 			add_into_moves(game, (x-2)+8*(y-2))
+			|> add_into_jump_checkers(i)
 			|> Map.put(:jump, true)
 		else game
 		end
@@ -206,6 +216,7 @@ defmodule Checkers.Game do
 		   and in_boundary(x+2, y-2)  
 		   and !in_checkers(game, (x+2)+8*(y-2)) do
 			add_into_moves(game, (x+2)+8*(y-2))
+			|> add_into_jump_checkers(i)
 			|> Map.put(:jump, true)
 		else game
 		end
@@ -220,6 +231,7 @@ defmodule Checkers.Game do
 		   and in_boundary(x-2, y+2)  
 		   and !in_checkers(game, (x-2)+8*(y+2)) do
 			add_into_moves(game, (x-2)+8*(y+2))
+			|> add_into_jump_checkers(i)
 			|> Map.put(:jump, true)
 		else game
 		end
@@ -234,6 +246,7 @@ defmodule Checkers.Game do
 		   and in_boundary(x+2, y+2)  
 		   and !in_checkers(game, (x+2)+8*(y+2)) do
 			add_into_moves(game, (x+2)+8*(y+2))
+			|> add_into_jump_checkers(i)
 			|> Map.put(:jump, true)
 		else game
 		end
@@ -241,7 +254,6 @@ defmodule Checkers.Game do
 
 	# check whether game position is in board's boundary
 	def in_boundary(x,y) do
-	IO.inspect "in_boundary"
 		x >= 0 and x <= 7 and y >= 0 and y <= 7
 	end
 
@@ -250,6 +262,13 @@ defmodule Checkers.Game do
 	IO.inspect "add_into_moves"
 		moves = game.moves ++ [i]
 		Map.put(game, :moves, moves)
+	end
+
+	# add given position into jump_checkers of given game
+	def add_into_jump_checkers(game, i) do
+	IO.inspect "add_into_jump_checkers"
+		jump_checkers = game.jump_checkers ++ [i]
+		Map.put(game, :jump_checkers, jump_checkers)
 	end
 
 	###########################################################################
@@ -278,6 +297,7 @@ defmodule Checkers.Game do
 		   and in_boundary(x-2, y-2)  
 		   and !in_checkers(game, (x-2)+8*(y-2)) do
 			add_into_moves(game, (x-2)+8*(y-2))
+			|> add_into_jump_checkers(i)
 			|> Map.put(:jump, true)
 		else game
 		end
@@ -292,6 +312,7 @@ defmodule Checkers.Game do
 		   and in_boundary(x+2, y-2)  
 		   and !in_checkers(game, (x+2)+8*(y-2)) do
 			add_into_moves(game, (x+2)+8*(y-2))
+			|> add_into_jump_checkers(i)
 			|> Map.put(:jump, true)
 		else game
 		end
@@ -306,6 +327,7 @@ defmodule Checkers.Game do
 		   and in_boundary(x-2, y+2)  
 		   and !in_checkers(game, (x-2)+8*(y+2)) do
 			add_into_moves(game, (x-2)+8*(y+2))
+			|> add_into_jump_checkers(i)
 			|> Map.put(:jump, true)
 		else game
 		end
@@ -320,6 +342,7 @@ defmodule Checkers.Game do
 		   and in_boundary(x+2, y+2)  
 		   and !in_checkers(game, (x+2)+8*(y+2)) do
 			add_into_moves(game, (x+2)+8*(y+2))
+			|> add_into_jump_checkers(i)
 			|> Map.put(:jump, true)
 		else game
 		end
@@ -411,13 +434,16 @@ defmodule Checkers.Game do
 	# handle click on a move
 	def click_move(game, i) do
 	IO.inspect "click move"
-		if game.jump do
+		cond do
+		  game.jump and in_jump_checkers(game, game.checker_selected) ->
 			click_jump(game, i)
-		else
+		  !game.jump ->
 			click_regular_move(game, i)
 			|> switch_player()
 			|> clear_moves()
 			|> check_winner()
+ 			|> check_force_jump()
+		  true -> game
 		end
 	end
 
@@ -545,6 +571,7 @@ defmodule Checkers.Game do
 	# click a jump
 	def click_jump(game, i) do
         IO.inspect "click jump"
+		game = Map.put(game, :jump_checkers, [])
 		cond do
 			in_light_s(game, game.checker_selected) -> jump_light_s(game, i)
 			in_light_k(game, game.checker_selected) -> jump_light_k(game, i)
@@ -583,6 +610,7 @@ defmodule Checkers.Game do
          	switch_player(game)
 		|> check_winner()
 		|> Map.put(:force_jump, false)
+		|> check_force_jump()
 	 end
 	end	
 
@@ -606,6 +634,7 @@ defmodule Checkers.Game do
          	switch_player(game)
 		|> check_winner()
 		|> Map.put(:force_jump, false)
+		|> check_force_jump()
 	 end
 	end	
 	
@@ -648,6 +677,7 @@ defmodule Checkers.Game do
          	switch_player(game)
 		|> check_winner()
 		|> Map.put(:force_jump, false)
+		|> check_force_jump()
 	 end
 	end	
 
@@ -671,6 +701,7 @@ defmodule Checkers.Game do
          	switch_player(game)
 		|> check_winner()
 		|> Map.put(:force_jump, false)
+		|> check_force_jump()
 	 end
 	end	
 	
@@ -694,5 +725,44 @@ defmodule Checkers.Game do
 			true -> game
 		end
 	end
+
+	#########################################################################
+	# check force jump
+	def check_force_jump(game) do
+		game = if game.current_player == "light" do
+		       	       check_force_jump_light_s(game)
+			       |> check_force_jump_light_k()
+		       else
+		       	       check_force_jump_dark_s(game)
+			       |> check_force_jump_dark_k()
+		       end
+		if length(game.moves) > 0 do
+			Map.put(game, :force_jump, true)
+		else
+			Map.put(game, :force_jump, false)
+		end
+	end
+
+
+	# check force jump  for light_s
+	def check_force_jump_light_s(game) do
+		Enum.reduce(game.light_s, game, fn(i, game) -> add_jumps(game, i) end)
+	end
+
+	# check force jump  for light_k
+	def check_force_jump_light_k(game) do
+		Enum.reduce(game.light_k, game, fn(i, game) -> add_jumps(game, i) end)
+	end
+
+	# check force jump  for dark_s
+	def check_force_jump_dark_s(game) do
+		Enum.reduce(game.dark_s, game, fn(i, game) -> add_jumps(game, i) end)
+	end
+
+	# check force jump  for dark_k
+	def check_force_jump_dark_k(game) do
+		Enum.reduce(game.dark_k, game, fn(i, game) -> add_jumps(game, i) end)
+	end
+
 
 end
