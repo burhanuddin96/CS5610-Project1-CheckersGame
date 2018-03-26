@@ -12,6 +12,7 @@ defmodule Checkers.Game do
       		current_player: "dark",
       		checker_selected: -1,
       		jump: false,
+      		force_jump: false,
       		winner: nil,
       		observers: [],
 		}
@@ -74,14 +75,14 @@ defmodule Checkers.Game do
 		|> Map.replace!(:observers, game.observers)
 	end
 
-	#############################################################################
+#############################################################################
 	# handle click event on board
 	# can click on a checker or a movement
         def click_checker_or_move(game, i) do
    		IO.inspect "click_checker_or_move"
 		cond do
 			in_moves(game, i) -> click_move(game, i)
-		  	in_checkers(game, i) -> click_checker(game, i)
+		  	!game.force_jump and in_checkers(game, i) -> click_checker(game, i)
 			true -> game
 		end
 	end
@@ -137,7 +138,7 @@ defmodule Checkers.Game do
 	##############################################################################
 	# handle click on a checker
      	def click_checker(game, i) do
-	IO.inspect "click_checker_or_move"
+	IO.inspect "click_checker"
 		game = clear_moves(game)  # clear previous moves
 		       |> Map.put(:jump, false) # jump change to false
 		       |> add_jumps(i)
@@ -575,10 +576,13 @@ defmodule Checkers.Game do
 	 game = clear_moves(game) # check continues jump
 		|> add_jumps(i)
 	 if length(game.moves) > 0 do
-		click_checker_or_move(game, i)
+		Map.put(game, :force_jump, true)
+		|> Map.put(:checker_selected, i)
+		|> click_checker_or_move(i)
 	 else
-         	switch_player(game) 
+         	switch_player(game)
 		|> check_winner()
+		|> Map.put(:force_jump, false)
 	 end
 	end	
 
@@ -595,10 +599,13 @@ defmodule Checkers.Game do
 	 game = clear_moves(game) # check continues jump
 		|> add_jumps(i)
 	 if length(game.moves) > 0 do
-		click_checker_or_move(game, i)
+		Map.put(game, :force_jump, true)
+		|> Map.put(:checker_selected, i)
+		|> click_checker_or_move(i)
 	 else
-         	switch_player(game) 
+         	switch_player(game)
 		|> check_winner()
+		|> Map.put(:force_jump, false)
 	 end
 	end	
 	
@@ -615,6 +622,7 @@ defmodule Checkers.Game do
 	# jump on dark checker
 	# jump a dark_s
 	def jump_dark_s(game, i) do
+        IO.inspect "click jump_dark_s"
 	 y1 = div(i, 8)
    	 x1 = rem(i, 8)
 	 y2 = div(game.checker_selected, 8)
@@ -633,10 +641,13 @@ defmodule Checkers.Game do
 	 game = clear_moves(game) # check continues jump
 		|> add_jumps(i)
 	 if length(game.moves) > 0 do
-		click_checker_or_move(game, i)
+		Map.put(game, :force_jump, true)
+		|> Map.put(:checker_selected, i)
+		|> click_checker_or_move(i)
 	 else
          	switch_player(game)
 		|> check_winner()
+		|> Map.put(:force_jump, false)
 	 end
 	end	
 
@@ -653,10 +664,13 @@ defmodule Checkers.Game do
 	 game = clear_moves(game) # check continues jump
 		|> add_jumps(i)
 	 if length(game.moves) > 0 do
-		click_checker_or_move(game, i)
+		Map.put(game, :force_jump, true)
+		|> Map.put(:checker_selected, i)
+		|> click_checker_or_move(i)
 	 else
          	switch_player(game)
 		|> check_winner()
+		|> Map.put(:force_jump, false)
 	 end
 	end	
 	
