@@ -8,12 +8,12 @@ defmodule Checkers.Game do
       		light_k: [],
      		dark_s: [0,2,4,6,9,11,13,15,16,18,20,22],
       		dark_k: [],
+		jump_checkers: [],
       		moves: [],
       		current_player: "dark",
       		checker_selected: -1,
       		jump: false,
       		force_jump: false,
-			jump_checkers: [],
       		winner: nil,
       		observers: [],
 		}
@@ -717,6 +717,12 @@ defmodule Checkers.Game do
 	########################################################################
 	# check winner
 	def check_winner(game) do
+		check_winner_empty(game)
+		|> check_winner_cannot_move()
+	end
+
+	# check winner when one palyer has zero number of checker
+	def check_winner_empty(game) do
 		cond do
 			length(game.light_k) == 0 and length(game.light_s) == 0
 			-> Map.put(game, :winner, "dark")
@@ -726,15 +732,36 @@ defmodule Checkers.Game do
 		end
 	end
 
+	# check winner when one palyer cannot make any move
+	def check_winner_cannot_move(game) do
+		checkers = if game.current_player == "light" do
+				game.light_s ++ game.light_k
+			   else
+				game.dark_s ++ game.dark_k
+			   end
+		temp_game = game
+		temp_game = Map.put(temp_game, :moves, [])
+		temp_game = Enum.reduce(checkers, temp_game, 
+				fn(i, temp_game) -> add_jumps(temp_game, i)
+						    |> add_regular_moves(i) end)
+		cond do
+			length(temp_game.moves) == 0 and game.current_player == "dark" 
+			  -> Map.put(game, :winner, "light")
+			length(temp_game.moves) == 0 and game.current_player == "light" 
+			  -> Map.put(game, :winner, "dark")
+			true -> game
+		end
+	end
+
 	#########################################################################
 	# check force jump
 	def check_force_jump(game) do
 		game = if game.current_player == "light" do
-		       	    check_force_jump_light_s(game)
-			       	|> check_force_jump_light_k()
+		       	       check_force_jump_light_s(game)
+			       |> check_force_jump_light_k()
 		       else
-		       	    check_force_jump_dark_s(game)
-			      	|> check_force_jump_dark_k()
+		       	       check_force_jump_dark_s(game)
+			       |> check_force_jump_dark_k()
 		       end
 		if length(game.moves) > 0 do
 			Map.put(game, :force_jump, true)
