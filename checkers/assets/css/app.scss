@@ -81,6 +81,10 @@ div#board {
 	width: 230px;
 }
 
+.obs-list{
+	font-size: 20px;
+}
+
 .card{
 	box-shadow: 7px 7px 4px black;
 }
@@ -182,6 +186,15 @@ div#board {
 .selected{
 	box-shadow: 7px 7px 4px grey;
 }
+
+.d-jump{
+	border-color: #101010 #870f03;
+}
+
+.l-jump{
+	border-color: #870f03 black;
+}
+
 
 
 

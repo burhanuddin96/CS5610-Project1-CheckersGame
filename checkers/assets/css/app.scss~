@@ -25,6 +25,9 @@ body {
 	color: brown;
 	font-family: 'Gochi Hand', cursive;
 	font-size: 50px;
+}
+
+.winbox{
 	background: url("/images/btnpic.jpg");
 	padding: 10px auto;
 }
@@ -76,6 +79,10 @@ div#board {
 	overflow: auto;
 	height: 260px;
 	width: 230px;
+}
+
+.obs-list{
+	font-size: 10px;
 }
 
 .card{
@@ -179,6 +186,15 @@ div#board {
 .selected{
 	box-shadow: 7px 7px 4px grey;
 }
+
+.d-jump{
+	border-color: #101010 #870f03;
+}
+
+.l-jump{
+	border-color: #870f03 black;
+}
+
 
 
 
