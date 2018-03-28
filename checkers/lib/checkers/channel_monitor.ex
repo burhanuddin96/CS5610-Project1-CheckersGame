@@ -1,3 +1,4 @@
+#The following code is referred from "https://stackoverflow.com/questions/33934029/how-to-detect-if-a-user-left-a-phoenix-channel-due-to-a-network-disconnect".
 
 defmodule Checkers.ChannelMonitor do
   use GenServer
